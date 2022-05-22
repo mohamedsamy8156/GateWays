@@ -9,7 +9,7 @@ The project is using
 
 2: AutoMapper for mappign between differnt objects
 
-3: Csahrp Functional extensions 
+3: Csharp Functional extensions 
 
 4: Xunit as unit testing project 
 
