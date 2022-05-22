@@ -1,0 +1,75 @@
+>>>>>>>>>>>>>>Adding Gatway<<<<<<<<<<<<<<<
+
+URL:https://localhost:44353/api/Gateway/AddGateWay
+
+Action :POST
+
+Body :
+
+{
+	"name": "Google.Gateway",
+	"ipV4": "0.1.2.3",
+	"description": "string",
+	"devices": [
+		{
+			"id": 0,
+			"vendor": "Apple",
+			"statusId": 1
+		},
+		
+		{
+			"id": 0,
+			"vendor": "Xaomi",
+			"statusId": 1
+		}
+	]
+}
+
+
+>>>>>>>>>>>>>>>>>>>>>>>> Get a gateway <<<<<<<<<<<<<<<<<<
+
+Action:GET
+URL : https://localhost:44353/api/Gateway/GetGateway?gatewayId=E1A2841D-5C7C-4C95-8686-655F7590F4B6
+
+
+
+
+
+>>>>>>>>>>>>>>>>>>>>>>> Get All Gateways   <<<<<<<<<<<<<<<<<<<<<<<
+
+Action: GET
+URL : https://localhost:44353/api/Gateway/GetAll
+
+
+
+
+>>>>>>>>>>>>>>>>>>>> ADD Device <<<<<<<<<<<<<<<<<<
+
+
+Action : POST
+URL :https://localhost:44353/api/Devices/Add
+
+Body : 
+{
+	"id":0,
+	"vendor":"Some vendor",
+	"statusId":1,
+	"gatewayId":"E1A2841D-5C7C-4C95-8686-655F7590F4B6"
+
+}
+
+
+>>>>>>>>>>>>>>>>>>>>>> Delete <<<<<<<<<<<<<<<<<<<<<<<<
+
+ACTION:DELETE 
+URL : https://localhost:44353/api/Devices/Delete?deviceId=4
+
+
+
+
+
+
+
+
+
+
