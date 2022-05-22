@@ -27,7 +27,8 @@ namespace Gateways.Commands.Validator.ValidationRules
             var deviceCommand = context.InstanceToValidate;
 
             var result = await _deviceQueryRepository.GetAllDeviceByGatewayId(deviceCommand.GatewayId.ToString());
-            context.AddFailure(new ValidationFailure("Gateway", $"This gateway has the maximum devices"));
+            if (!(result.IsSuccess && result.Value.Count <= 10))
+                context.AddFailure(new ValidationFailure("Gateway", $"This gateway has the maximum devices"));
 
             return result.IsSuccess && result.Value.Count <= 10;
 

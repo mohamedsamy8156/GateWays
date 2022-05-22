@@ -29,22 +29,25 @@ namespace Gateways.Commands.Commands
         private readonly IDeviceQueryRepository _deviceQueryRepository;
         private readonly IMapper _mapper;
         private readonly IDeviceCommandRepository _deviceCommandRepository;
+        private readonly IGatewayQueryRepository _gatewayQueryRepository;
 
-        public SaveDeviceCommandHandler(IDeviceQueryRepository deviceQueryRepository, IMapper mapper, IDeviceCommandRepository deviceCommandRepository)
+
+        public SaveDeviceCommandHandler(IDeviceQueryRepository deviceQueryRepository, IMapper mapper, IDeviceCommandRepository deviceCommandRepository,
+            IGatewayQueryRepository gatewayQueryRepository)
         {
             _deviceQueryRepository = deviceQueryRepository;
             _mapper = mapper;
             _deviceCommandRepository = deviceCommandRepository;
+            _gatewayQueryRepository = gatewayQueryRepository;
         }
 
         public async Task<Result<DeviceModel>> HandleAsync(AddDeviceCommand command)
         {
             try
             {
-                var validationResult = new ValidationResult("Maximum Devices");
 
-                var validator = new AddDeviceCommandValidator(_deviceQueryRepository);
-                var commandalidationResult = validator.Validate(command);
+                var validator = new AddDeviceCommandValidator(_deviceQueryRepository, _gatewayQueryRepository);
+                var commandalidationResult = await validator.ValidateAsync(command);
 
                 if (commandalidationResult.IsValid)
                 {
@@ -61,7 +64,7 @@ namespace Gateways.Commands.Commands
 
                 }
 
-                return Result.Failure<DeviceModel>(commandalidationResult.Errors.ToString());
+                return Result.Failure<DeviceModel>(string.Join (",",commandalidationResult));
 
             }
             catch (Exception exception)
