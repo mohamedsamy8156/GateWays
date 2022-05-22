@@ -1,0 +1,58 @@
+﻿using Gateways.Infrastructure.Persistence;
+using Gateways.UnitTests;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
+
+namespace Gateways.UnitTests
+{
+    public class TestApplicationFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
+    {
+        protected override void ConfigureWebHost(IWebHostBuilder builder)
+        {
+            builder.ConfigureServices( services =>
+            {
+                builder.UseEnvironment("Development");
+
+                var context = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<GatewayDbContext>));
+                if (context != null)
+                {
+                    bool isDeleted = services.Remove(context);
+                }
+
+                services.AddDbContext<GatewayDbContext>(options =>
+                {
+                    options.UseInMemoryDatabase("GatewaysInMemoryDb");//.UseInternalServiceProvider();
+                });
+
+                // Build the service provider.
+                var serviceProvider = services.BuildServiceProvider();
+
+                // Create a scope to obtain a reference to the database contexts
+                using var scope = serviceProvider.CreateScope();
+                var scopedServices = scope.ServiceProvider;
+
+                var context1 = serviceProvider.GetRequiredService<GatewayDbContext>();
+
+                var logger = scopedServices.GetRequiredService<ILogger<TestApplicationFactory<TStartup>>>();
+
+                // Ensure the database is created.
+
+                try
+                {
+                    // Seed the database with some specific test data.
+                     GatewaysData.SeedingDataAsync(context1);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "An error occurred seeding the " +
+                                        "database with test messages. Error: {ex.Message}");
+                }
+            });
+        }
+    }
+}
