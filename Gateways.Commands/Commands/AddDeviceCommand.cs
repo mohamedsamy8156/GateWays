@@ -47,6 +47,7 @@ namespace Gateways.Commands.Commands
             {
 
                 var validator = new AddDeviceCommandValidator(_deviceQueryRepository, _gatewayQueryRepository);
+
                 var commandalidationResult = await validator.ValidateAsync(command);
 
                 if (commandalidationResult.IsValid)
